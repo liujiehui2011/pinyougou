@@ -3,8 +3,7 @@ package com.pinyougou.manager.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Brand;
 import com.pinyougou.service.BrandService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,6 +13,7 @@ import java.util.List;
  * @RestController: 我们这里需要返回json格式,这个标签相当于@Controller 和 @ResponseBody
  **/
 @RestController
+@RequestMapping("/brand")
 public class BrandController {
     /**
      * 引用服务接口代理对象
@@ -23,8 +23,32 @@ public class BrandController {
     private BrandService brandService;
 
     /* 查询全部品牌 */
-    @GetMapping("/brand/findAll")
+    @GetMapping("/findAll")
     public List<Brand> findAll(){
         return brandService.findAll();
+    }
+
+    /* 查询全部品牌 */
+    @PostMapping("/save")
+    public boolean save(@RequestBody Brand brand){
+        try {
+            brandService.save(brand);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /* 修改 */
+    @PostMapping("/update")
+    public boolean update(@RequestBody Brand brand){
+        try {
+            brandService.update(brand);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
