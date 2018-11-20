@@ -29,7 +29,7 @@
 				/*配置分页信息*/
                 currentPage:1,  //当前页
                 totalItems:0,  //总条数
-                itemsPerPage:5, //页大小
+                itemsPerPage:8, //页大小
                 perPageOptions:[1,2,3,4,5,6,7,8,9,10], //每页显示多少
 
 				/*当页码改变时重新加载数据*/
@@ -44,12 +44,18 @@
 				$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
             }
 
-
+            /* 多条件分页查询品牌 */
+            //定义查询条件对象
+            $scope.searchEntity = {};
 
             /** 分页查询品牌信息 */
             $scope.search = function (page, rows) {
-				/* 发送异步请求实现分页查询品牌数据 */
-				$http.get('/brand/findByPage?page='+ page +'&rows=' + rows).then(function (response) {
+                //多条件分页查询品牌
+                $http({
+                    method : 'get', // 请求方式
+                    url :'/brand/findByPage?page='+ page +'&rows=' + rows, // 请求URL
+                    params : $scope.searchEntity // 请求参数
+                }).then(function (response) {
 					$scope.dataList = response.data.rows;
 					/* 更新总记录数 */
 					$scope.paginationConf.totalItems=response.data.total;
@@ -123,12 +129,12 @@
 					<!--  查询条件区-->
 					<table>
 						<tr>
-							<td><input class="form-control" placeholder="品牌名称">
+							<td><input class="form-control" placeholder="品牌名称" ng-model="searchEntity.name">
 							</td>
-							<td><input class="form-control" placeholder="首字母">
+							<td><input class="form-control" placeholder="首字母" ng-model="searchEntity.firstChar">
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">
+								<button type="button" class="btn btn-default" ng-click="reload()">
 									<i class="fa fa-trash-o"></i> 查询
 								</button>
 							</td>

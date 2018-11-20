@@ -105,8 +105,7 @@ public class BrandServiceImpl implements BrandService {
         PageInfo<Brand> pageInfo= PageHelper.startPage(page,rows).doSelectPageInfo(new ISelect() {
             @Override
             public void doSelect() {
-                brandMapper.selectAll();
-                //System.out.println("结果"+brandMapper.selectAll());
+                brandMapper.findAll(brand);
             }
         });
         return new PageResult(pageInfo.getTotal(),pageInfo.getList());
