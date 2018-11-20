@@ -92,6 +92,46 @@
                 //$scope.entity=entity;
             }
 
+            /*定义复选框选中的品牌id*/
+            $scope.ids = [];
+
+            /*为复选框 checkbox绑定点击事件*/
+			$scope.updateSelection = function ($event,id) {
+				//$event.target:获取选中的复选框dom元素
+				//$event.target.checked 获取当前状态(选中为true,未选中为false)
+				if($event.target.checked){ //选中
+                    $scope.ids.push(id)
+				}else { //取消选中
+					 // 获取元素在数组中的索引值
+					var idx = $scope.ids.indexOf(id);
+                    // 根据索引号删除数组中的元素
+					/*
+						第一个参数: 元素在数组中的索引号
+						第二个参数: 删除元素个数
+					* */
+					$scope.ids.splice(idx,1);
+				}
+            }
+
+            /* 为删除按钮绑定事件 */
+            $scope.delete = function () {
+				if($scope.ids.length>0){
+					//发送异步请求
+					$http.get("/brand/delete?ids="+$scope.ids).then(function (response) {
+						if(response.data){
+						    //清空数组
+							$scope.ids=[];
+							//重新加载数据
+							$scope.reload();
+						}else {
+						    alert("删除失败")
+						}
+					})
+				}else {
+				    alert("请选中后再删除")
+				}
+            }
+
         })
 
 	</script>
@@ -119,7 +159,7 @@
 				<div class="form-group form-inline">
 					<div class="btn-group">
 						<button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}" ><i class="fa fa-file-o"></i> 新建</button>
-						<button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>           
+						<button type="button" class="btn btn-default" title="删除" ng-click="delete()" ><i class="fa fa-trash-o"></i> 删除</button>
 						<button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
 					</div>
 				</div>
@@ -161,7 +201,8 @@
 					ng-repeat:循环,语法格式:ng-repeat=”变量名 in 集合或数组”;
 				-->
 					<tr ng-repeat="entity in dataList">
-						<td><input  type="checkbox" ></td>			                              
+						<!-- $event 是angularJS里面事件对象(用来封装了当前的html元素对应的dom元素) -->
+						<td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>
 						<td>{{entity.id}}</td>
 						<td>{{entity.name}}</td>
 						<td>{{entity.firstChar}}</td>

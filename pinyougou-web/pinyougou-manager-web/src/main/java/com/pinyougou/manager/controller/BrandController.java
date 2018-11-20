@@ -67,4 +67,18 @@ public class BrandController {
         }
         return brandService.findByPage(brand, page, rows);
     }
+
+
+    /* 删除品牌 */
+    @GetMapping("/delete")
+    public boolean delete(Long[] ids){
+        try {
+            brandService.deleteAll(ids);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
