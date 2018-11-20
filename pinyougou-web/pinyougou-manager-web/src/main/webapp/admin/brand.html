@@ -11,18 +11,49 @@
     <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="/plugins/angularjs/angular.min.js"></script>
 
+	<!-- 分页模块开始,使用angularjs做分页需要导入下面两个文件-->
+	<link rel="stylesheet" href="/plugins/angularjs/pagination.css"/>
+	<script src="/plugins/angularjs/pagination.js"></script>
+	<!-- 分页模块结束 -->
+
 	<!--AngularJS代码块-->
 	<script type="text/javascript">
 		/* 定义模块,固定格式 :定义模块语法格式：var 变量名 = angular.module(“模块名”, []) */
-		var app = angular.module("pinyougou",[]);
+		var app = angular.module("pinyougou",['pagination']);
+		
 		/* 添加控制器 */
         app.controller("brandController",function ($scope, $http) {
-            /** 读取列表数据绑定到表格中 */
-            $scope.findAll = function(){
-                /** 发送异步请求查询数据 */
-                $http.get("/brand/findAll").then(function(response){
-                    $scope.dataList = response.data;
-                });
+
+            /* 分页指令配置信息对象 */
+            $scope.paginationConf ={
+				/*配置分页信息*/
+                currentPage:1,  //当前页
+                totalItems:0,  //总条数
+                itemsPerPage:5, //页大小
+                perPageOptions:[1,2,3,4,5,6,7,8,9,10], //每页显示多少
+
+				/*当页码改变时重新加载数据*/
+                onChange:function () {
+                    $scope.reload();
+                }
+            };
+
+            /* 重新加载表数据 */
+            $scope.reload = function () {
+                //切换页码
+				$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+            }
+
+
+
+            /** 分页查询品牌信息 */
+            $scope.search = function (page, rows) {
+				/* 发送异步请求实现分页查询品牌数据 */
+				$http.get('/brand/findByPage?page='+ page +'&rows=' + rows).then(function (response) {
+					$scope.dataList = response.data.rows;
+					/* 更新总记录数 */
+					$scope.paginationConf.totalItems=response.data.total;
+				});
             };
 
             /* 添加 和 修改品牌 */
@@ -37,7 +68,7 @@
 					.then(function(response){
 					if(response.data){
 						/*添加成功,重新查询全部数据*/
-						$scope.findAll();
+                        $scope.reload();
 						if(url=="save"){
                             alert("添加成功");
 						}else {
@@ -67,8 +98,7 @@
 -->
 <body class="hold-transition skin-red sidebar-mini"
 	  ng-app="pinyougou"
-	  ng-controller="brandController"
-	  ng-init="findAll()">
+	  ng-controller="brandController">
 
 	<!-- .box-body -->
 	<div class="box-header with-border">
@@ -135,6 +165,12 @@
 					</tr>
 				</tbody>
 			 </table>
+
+
+			<!--分页指令-->
+			<tm-pagination conf="paginationConf"/>
+
+
 			 <!--数据列表/-->                        
 		</div>
 		<!-- 数据表格 /-->
