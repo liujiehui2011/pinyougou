@@ -1,5 +1,5 @@
 /* 添加控制器 */
-app.controller("brandController",function ($scope,$controller, brandService) {
+app.controller("brandController",function ($scope,$controller, baseService) {
 
     /** 指定继承baseController */
     $controller('baseController',{$scope:$scope});
@@ -12,7 +12,7 @@ app.controller("brandController",function ($scope,$controller, brandService) {
     $scope.search = function (page, rows) {
 
         //多条件分页查询
-        brandService.findByPage("/brand/findByPage",page,rows,$scope.searchEntity)
+        baseService.findByPage("/brand/findByPage",page,rows,$scope.searchEntity)
 
         .then(function (response) {
             $scope.dataList = response.data.rows;
@@ -28,7 +28,7 @@ app.controller("brandController",function ($scope,$controller, brandService) {
         if($scope.entity.id){
             url="update";  //修改
         }
-        brandService.sendPost("/brand/"+url,$scope.entity)
+        baseService.sendPost("/brand/"+url,$scope.entity)
             .then(function(response){
                 if(response.data){
                     /*添加成功,重新查询全部数据*/
@@ -55,7 +55,7 @@ app.controller("brandController",function ($scope,$controller, brandService) {
     $scope.delete = function () {
         if($scope.ids.length>0){
             //发送异步请求
-            brandService.deleteById("/brand/delete",$scope.ids)
+            baseService.deleteById("/brand/delete",$scope.ids)
             .then(function (response) {
                 if(response.data){
                     //清空数组
