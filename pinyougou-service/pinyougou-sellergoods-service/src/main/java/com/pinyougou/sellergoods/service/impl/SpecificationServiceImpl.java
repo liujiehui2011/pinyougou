@@ -8,6 +8,7 @@ import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.mapper.SpecificationMapper;
 import com.pinyougou.mapper.SpecificationOptionMapper;
 import com.pinyougou.pojo.Specification;
+import com.pinyougou.pojo.SpecificationOption;
 import com.pinyougou.service.SpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,19 @@ public class SpecificationServiceImpl implements SpecificationService {
      */
     @Override
     public void update(Specification specification) {
+        try {
+            // 修改规格名称
+            specificationMapper.updateByPrimaryKeySelective(specification);
 
+            //修改规格选项表数据
+            SpecificationOption specificationOption = new SpecificationOption();
+            specificationOption.setSpecId(specification.getId());
+            //根据SpecId将数据删除,然后重新添加
+            specificationOptionMapper.delete(specificationOption);
+            specificationOptionMapper.save(specification);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -108,5 +121,14 @@ public class SpecificationServiceImpl implements SpecificationService {
             }
         });
         return new PageResult(pageInfo.getTotal(),pageInfo.getList());
+    }
+
+    /* 根据规格主键查询规格选项 */
+    @Override
+    public List<SpecificationOption> findSpecOption(Long id) {
+        //创建SpecificationOption对象,将id值赋值给 specId 属性,然后查询
+        SpecificationOption so = new SpecificationOption();
+        so.setSpecId(id);
+        return specificationOptionMapper.select(so);
     }
 }

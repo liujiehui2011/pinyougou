@@ -3,9 +3,12 @@ package com.pinyougou.manager.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.pojo.Specification;
+import com.pinyougou.pojo.SpecificationOption;
 import com.pinyougou.service.SpecificationService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 规格管理
@@ -36,6 +39,26 @@ public class SpecificationController {
     public boolean save(@RequestBody Specification specification){
         try {
             specificationService.save(specification);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    /* 根据规格主键查询规格选项 */
+    @GetMapping("/findSpecOption")
+    public List<SpecificationOption> findSpecOption(Long id){
+        return specificationService.findSpecOption(id);
+    }
+
+
+    /* 保存 */
+    @PostMapping("/update")
+    public boolean update(@RequestBody Specification specification){
+        try {
+            specificationService.update(specification);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

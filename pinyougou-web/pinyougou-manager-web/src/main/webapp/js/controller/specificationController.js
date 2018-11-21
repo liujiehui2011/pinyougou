@@ -27,14 +27,28 @@ app.controller("specificationController",function ($scope,$controller,baseServic
     }
     
     /* 保存 */
-    $scope.saveOrUpdate = function () {
-        baseService.sendPost("/specification/save",$scope.entity)
+    $scope.savexOrUpdate = function () {
+        //定义url
+        var url = "save";
+        if($scope.entity.id){
+            url="update";
+        }
+        baseService.sendPost("/specification/"+url,$scope.entity)
             .then(function (response) {
                 if(response.data){
                     $scope.reload();
                 }else {
-                    alert("添加失败!")
+                    alert("操作失败!")
                 }
+            })
+    }
+
+    /* 修改 */
+    $scope.show = function (entity) {
+        $scope.entity = entity;
+        baseService.sendGet("/specification/findSpecOption?id="+entity.id)
+            .then(function (response) {
+                $scope.entity.specificationOptions = response.data;
             })
     }
 })
