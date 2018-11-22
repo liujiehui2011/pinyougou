@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 品牌控制器:
@@ -21,7 +22,7 @@ public class BrandController {
      * 引用服务接口代理对象
      * timeout: 调用服务接口方法超时时间毫秒数
      */
-    @Reference(timeout = 1000)
+    @Reference(timeout = 10000)
     private BrandService brandService;
 
     /* 查询全部品牌 */
@@ -79,6 +80,12 @@ public class BrandController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /* 查询全部品牌id 和 品牌名, 这里只需要id 和 品牌,不需要全部数据,我们可以用map集合接收 */
+    @GetMapping("/findBrandList")
+    public List<Map<String,Object>> findBrandList(){
+        return brandService.findAllByIdAndName();
     }
 
 }

@@ -26,12 +26,12 @@ app.controller("specificationController",function ($scope,$controller,baseServic
         $scope.entity.specificationOptions.splice(index,1)
     }
     
-    /* 保存 */
+    /* 保存,修改 */
     $scope.savexOrUpdate = function () {
         //定义url
-        var url = "save";
+        var url = "save";  //新建
         if($scope.entity.id){
-            url="update";
+            url="update";  //修改
         }
         baseService.sendPost("/specification/"+url,$scope.entity)
             .then(function (response) {

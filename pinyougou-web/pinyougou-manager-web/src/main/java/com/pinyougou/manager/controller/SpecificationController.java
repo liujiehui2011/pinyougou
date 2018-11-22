@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 规格管理
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/specification")
 public class SpecificationController {
     /* 注入service */
-    @Reference(timeout = 1000)
+    @Reference(timeout = 10000)
     private SpecificationService specificationService;
 
     /* 分页查询品牌信息 */
@@ -64,5 +65,10 @@ public class SpecificationController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @GetMapping("/findSpecificationList")
+    public List<Map<String,Object>> findSpecificationList(){
+        return specificationService.findAllByIdAndName();
     }
 }

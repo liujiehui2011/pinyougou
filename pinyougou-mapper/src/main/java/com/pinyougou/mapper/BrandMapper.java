@@ -1,9 +1,11 @@
 package com.pinyougou.mapper;
 
 import com.pinyougou.pojo.Brand;
+import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
     品牌数据访问接口
@@ -11,4 +13,7 @@ import java.util.List;
 public interface BrandMapper extends Mapper<Brand> {
 
     List<Brand> findAll(Brand brand);
+
+    @Select("select id,name text from tb_brand")
+    List<Map<String,Object>> findAllByIdAndName();
 }

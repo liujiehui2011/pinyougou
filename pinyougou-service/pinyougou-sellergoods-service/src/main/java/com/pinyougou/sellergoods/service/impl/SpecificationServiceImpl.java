@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
     规格管理接口实体类
@@ -130,5 +131,15 @@ public class SpecificationServiceImpl implements SpecificationService {
         SpecificationOption so = new SpecificationOption();
         so.setSpecId(id);
         return specificationOptionMapper.select(so);
+    }
+
+    /* 查询全部规格 id 和 name */
+    @Override
+    public List<Map<String, Object>> findAllByIdAndName() {
+        try {
+            return specificationMapper.findAllByIdAndName();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
