@@ -5,9 +5,7 @@ import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.pojo.TypeTemplate;
 import com.pinyougou.service.TypeTemplateService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *  类型模板控制器
@@ -30,5 +28,38 @@ public class TypeTemplateController {
             }
         }
         return typeTemplateService.findByPage(typeTemplate,page,rows);
+    }
+
+    @PostMapping("/save")
+    public boolean save(@RequestBody TypeTemplate typeTemplate){
+        try {
+            typeTemplateService.save(typeTemplate);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @PostMapping("/update")
+    public boolean update(@RequestBody TypeTemplate typeTemplate){
+        try {
+            typeTemplateService.update(typeTemplate);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @GetMapping("/delete")
+    public boolean delete(Long[] ids){
+        try {
+            typeTemplateService.deleteAll(ids);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
