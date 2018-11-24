@@ -6,7 +6,7 @@ app.controller("baseController",function ($scope) {
         /*配置分页信息*/
         currentPage:1,  //当前页
         totalItems:0,  //总条数
-        itemsPerPage:10, //页大小
+        itemsPerPage:5, //页大小
         perPageOptions:[1,2,3,4,5,6,7,8,9,10], //每页显示多少
 
         /*当页码改变时重新加载数据*/
